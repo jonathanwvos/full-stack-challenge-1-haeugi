@@ -1,26 +1,27 @@
-version: "3.7"
-
-# A skeleton docker-compose file is provided. You
-# should update this file as needed. In its current
-# state only the clickhouse service will be brought up
-# properly.
-
+version: '3.8'
 
 services:
   clickhouse:
     image: yandex/clickhouse-server:latest
     restart: always
     ports:
-      - "8123:8123"
+      - '8123:8123'
+      - '9000:9000'
 
-  shopify_syncer:
+  scraper:
     env_file:
       - .env
     build: .
-    command: python -u /usr/src/app/scraper.py
+    depends_on:
+      - clickhouse
+    command: /bin/bash -c "python -u app/scraper.py"
 
   reporter:
     env_file:
       - .env
     build: .
-    command: python -u /usr/src/app/reporter.py
+    depends_on:
+      - clickhouse
+    ports:
+      - '5000:5000'
+    command: /bin/bash -c "python -u app/reporter.py"

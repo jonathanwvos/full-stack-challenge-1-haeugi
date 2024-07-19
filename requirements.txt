@@ -1,3 +1,4 @@
-# This file intentionally left blank. Add your Python
-# requirements here as needed
-
+python-dotenv
+ShopifyAPI
+clickhouse-driver
+Flask
